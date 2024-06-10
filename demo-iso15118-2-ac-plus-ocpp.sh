@@ -166,7 +166,8 @@ if [[ "$DEMO_VERSION" != v1.6j ]]; then
   # Start the CSMS
   echo "Starting the CSMS"
   if [[ ${CSMS} == "citrine" ]]; then 
-    cd "Server"
+    cd Server
+    chmod -R 777 data/
     # Remap the CitrineOS 8081 port (HTTP w/ no auth) to 80 port
     CITRINE_DOCKER="docker-compose.yml"
 

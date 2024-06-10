@@ -1,12 +1,12 @@
-FROM --platform=linux/x86_64 ghcr.io/everest/build-kit-alpine:latest
+FROM --platform=linux/x86_64 ghcr.io/everest/build-kit-alpine:v1.1.2
 
-ARG EVEREST_VERSION=2024.3.0
-ENV EVEREST_VERSION=${EVEREST_VERSION}
+ARG EVEREST_VERSION=charin-e2e-demo
+ENV EVEREST_VERSION=charin-e2e-demo
 
 COPY install.sh ./
 
 # Cloning the repo now and copying files over
-RUN git clone https://github.com/EVerest/everest-core.git \
+RUN git clone https://github.com/US-JOET/everest-core.git \
         && cd everest-core \
         && git checkout ${EVEREST_VERSION} \
         && cd .. \
@@ -23,4 +23,4 @@ COPY device_model_storage_maeve_sp1.db ./dist/share/everest/modules/OCPP201/devi
 
 COPY run-test.sh /ext/source/tests/run-test.sh
 
-LABEL org.opencontainers.image.source=https://github.com/everest/everest-demo
+#LABEL org.opencontainers.image.source=https://github.com/everest/everest-demo

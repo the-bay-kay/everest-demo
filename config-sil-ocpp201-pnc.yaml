@@ -50,22 +50,32 @@ active_modules:
   slac:
     module: JsSlacSimulator
   car_simulator_1:
-    module: JsCarSimulator
+    module: EvseManager
     config_module:
       connector_id: 1
-      auto_enable: true
-      auto_exec: false
-      auto_exec_commands: sleep 1;iec_wait_pwr_ready;sleep 1;draw_power_regulated 16,3;sleep 30;unplug
+      three_phases: true
+      has_ventilation: true
+      country_code: DE
+      evse_id: "DE*PNX*00001"
+      session_logging: true
+      session_logging_xml: false
+      session_logging_path: /tmp/everest-logs
+      ac_hlc_enabled: true
+      ac_hlc_use_5percent: false
+      ac_enforce_hlc: false
     connections:
-      simulation_control:
+      bsp:
         - module_id: yeti_driver_1
-          implementation_id: yeti_simulation_control
-      ev:
-        - module_id: iso15118_car
-          implementation_id: ev
+          implementation_id: board_support
+      powermeter_grid_side:
+        - module_id: yeti_driver_1
+          implementation_id: powermeter
       slac:
         - module_id: slac
-          implementation_id: ev
+          implementation_id: evse
+      hlc:
+        - module_id: iso15118_charger
+          implementation_id: charger
   ocpp:
     module: OCPP201
     connections:
