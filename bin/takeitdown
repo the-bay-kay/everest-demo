@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+sudo docker compose -p everest-ac-demo down
+sudo docker compose -p server down
+sudo docker compose -p maeve-csms down
