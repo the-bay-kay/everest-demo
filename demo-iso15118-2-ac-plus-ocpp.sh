@@ -354,8 +354,10 @@ docker restart everest-ac-demo-nodered-1
 # Configure and restart EVerest
 docker cp config-sil-ocpp201-pnc.yaml  everest-ac-demo-manager-1:/ext/source/config/config-sil-ocpp201-pnc.yaml
 docker cp manager/enable_payment_method.patch everest-ac-demo-manager-1:/tmp/
+docker cp manager/support_payment_in_jsevmanager.patch everest-ac-demo-manager-1:/tmp/
 docker cp manager/enable_evcc_logging.cfg everest-ac-demo-manager-1:/ext/source/build/dist/etc/everest/default_logging.cfg
 docker exec everest-ac-demo-manager-1 /bin/bash -c "apk add patch && cd /ext && patch -p0 -i /tmp/enable_payment_method.patch"
+docker exec everest-ac-demo-manager-1 /bin/bash -c "cd /ext/source/build/dist/libexec/everest && patch -p1 -i /tmp/support_payment_in_jsevmanager.patch"
 
 if [[ "$DEMO_VERSION" =~ sp2 || "$DEMO_VERSION" =~ sp3 ]]; then
   docker cp manager/cached_certs_correct_name_emaid.tar.gz everest-ac-demo-manager-1:/ext/source/build
