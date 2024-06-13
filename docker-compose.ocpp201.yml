@@ -10,11 +10,6 @@ services:
   manager:
     image: ghcr.io/us-joet/everest-demo/manager:charin-e2e-demo
     platform: linux/x86_64
-    deploy:
-      resources:
-        limits:
-          cpus: "${EVEREST_MANAGER_CPUS}"
-          memory: "${EVEREST_MANAGER_MEMORY}"
     depends_on:
       - mqtt-server
     environment:
