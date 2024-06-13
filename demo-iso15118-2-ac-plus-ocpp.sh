@@ -357,7 +357,6 @@ docker cp manager/enable_payment_method.patch everest-ac-demo-manager-1:/tmp/
 docker cp manager/support_payment_in_jsevmanager.patch everest-ac-demo-manager-1:/tmp/
 docker cp manager/ocpp201.module.patch everest-ac-demo-manager-1:/tmp/
 docker cp manager/libocpp.patch everest-ac-demo-manager-1:/tmp/
-docker cp manager/enable_evcc_logging.cfg everest-ac-demo-manager-1:/ext/source/build/dist/etc/everest/default_logging.cfg
 
 echo "Applying the ones that need recompile first"
 docker exec everest-ac-demo-manager-1 /bin/bash -c "apk add patch && cd /ext/source && patch -p0 -i /tmp/ocpp201.module.patch"
@@ -367,6 +366,7 @@ echo "Recompiling"
 docker exec everest-ac-demo-manager-1 /bin/bash -c "cd /ext/source/build && make install -j6"
 
 echo "Now applying the patches that don't need recompile and will, in fact, be overridden by recompile"
+docker cp manager/enable_evcc_logging.cfg everest-ac-demo-manager-1:/ext/source/build/dist/etc/everest/default_logging.cfg
 docker exec everest-ac-demo-manager-1 /bin/bash -c "cd /ext && patch -p0 -i /tmp/enable_payment_method.patch"
 docker exec everest-ac-demo-manager-1 /bin/bash -c "cd /ext/source/build/dist/libexec/everest && patch -p1 -i /tmp/support_payment_in_jsevmanager.patch"
 
