@@ -90,7 +90,7 @@ diff -r -uw libocpp_unmod/lib/ocpp/v201/messages/SetChargingProfile.cpp libocpp/
 -    k.chargingProfile = j.at("chargingProfile");
 +    EVLOG_error << "In the message class, parsing from JSON: " << j;
 +    k.evseId = j.value("evseId", 1);
-+    k.chargingProfile = j.value("chargingProfile", j.at("ChargingProfileType"));
++    k.chargingProfile = j.value("chargingProfile", j.at("ChargingProfile"));
  
      // the optional parts of the message
      if (j.contains("customData")) {
