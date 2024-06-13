@@ -347,15 +347,28 @@ fi
 pushd everest-demo || exit 1
 docker compose --project-name everest-ac-demo --file "${DEMO_COMPOSE_FILE_NAME}" up -d --wait
 
-# Configure and restart nodered
+echo "Configuring and restarting nodered"
 docker cp nodered/config/config-sil-iso15118-ac-flow.json everest-ac-demo-nodered-1:/config/config-sil-two-evse-flow.json
 docker restart everest-ac-demo-nodered-1
 
-# Configure and restart EVerest
+echo "Copying over all EVerest patches"
 docker cp config-sil-ocpp201-pnc.yaml  everest-ac-demo-manager-1:/ext/source/config/config-sil-ocpp201-pnc.yaml
 docker cp manager/enable_payment_method.patch everest-ac-demo-manager-1:/tmp/
+docker cp manager/support_payment_in_jsevmanager.patch everest-ac-demo-manager-1:/tmp/
+docker cp manager/ocpp201.module.patch everest-ac-demo-manager-1:/tmp/
+docker cp manager/libocpp.patch everest-ac-demo-manager-1:/tmp/
+
+echo "Applying the ones that need recompile first"
+docker exec everest-ac-demo-manager-1 /bin/bash -c "apk add patch && cd /ext/source && patch -p0 -i /tmp/ocpp201.module.patch"
+docker exec everest-ac-demo-manager-1 /bin/bash -c "cd /ext/cache/cpm/libocpp/6502037f667273b3f55e917ec94a3fe0a2d27720 && patch -p0 -i /tmp/libocpp.patch"
+
+echo "Recompiling"
+docker exec everest-ac-demo-manager-1 /bin/bash -c "cd /ext/source/build && make install -j6"
+
+echo "Now applying the patches that don't need recompile and will, in fact, be overridden by recompile"
 docker cp manager/enable_evcc_logging.cfg everest-ac-demo-manager-1:/ext/source/build/dist/etc/everest/default_logging.cfg
-docker exec everest-ac-demo-manager-1 /bin/bash -c "apk add patch && cd /ext && patch -p0 -i /tmp/enable_payment_method.patch"
+docker exec everest-ac-demo-manager-1 /bin/bash -c "cd /ext && patch -p0 -i /tmp/enable_payment_method.patch"
+docker exec everest-ac-demo-manager-1 /bin/bash -c "cd /ext/source/build/dist/libexec/everest && patch -p1 -i /tmp/support_payment_in_jsevmanager.patch"
 
 if [[ "$DEMO_VERSION" =~ sp2 || "$DEMO_VERSION" =~ sp3 ]]; then
   docker cp manager/cached_certs_correct_name_emaid.tar.gz everest-ac-demo-manager-1:/ext/source/build

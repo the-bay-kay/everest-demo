@@ -1,0 +1,42 @@
+diff -r -uw modules/OCPP201/OCPP201.cpp modules/OCPP201/OCPP201.cpp
+--- modules/OCPP201/OCPP201.cpp	2024-06-11 22:16:13
++++ modules/OCPP201/OCPP201.cpp	2024-06-12 15:05:09
+@@ -421,9 +421,11 @@
+         };
+ 
+     // Smart Charging support
++    EVLOG_warning << "Launching timer for calling set_external_limits function";
+     this->charging_schedules_timer = std::make_unique<Everest::SteadyTimer>([this]() {
+         const auto charging_schedules =
+             this->charge_point->get_all_composite_charging_schedules(this->config.PublishChargingScheduleDurationS);
++        EVLOG_warning << "Timer complete, calling set_external_limits function";
+         this->set_external_limits(charging_schedules);
+         this->publish_charging_schedules(charging_schedules);
+     });
+@@ -434,7 +436,7 @@
+     };
+ 
+     callbacks.signal_set_charging_profiles_callback = [this]() {
+-        EVLOG_info << "Received a new Charging Schedules from the CSMS or another actor.";
++        EVLOG_warning << "Received a new Charging Schedules from the CSMS or another actor.";
+         const auto charging_schedules =
+             this->charge_point->get_all_composite_charging_schedules(this->config.PublishChargingScheduleDurationS);
+         this->set_external_limits(charging_schedules);
+@@ -577,6 +579,8 @@
+     // for each EVSE
+     for (auto const& [evse_id, schedule] : charging_schedules) {
+         types::energy::ExternalLimits limits;
++        // SORRY!!
++        if (evse_id == 0) continue;
+         std::vector<types::energy::ScheduleReqEntry> schedule_import;
+         for (const auto period : schedule.chargingSchedulePeriod) {
+             types::energy::ScheduleReqEntry schedule_req_entry;
+@@ -597,7 +601,7 @@
+         limits.schedule_import.emplace(schedule_import);
+ 
+         // FIXME: Support EVSE ID 0
+-        EVLOG_debug << "OCPP sets the following external limits for EVSE " << evse_id << ": \n" << limits;
++        EVLOG_warning << "OCPP sets the following external limits for EVSE " << evse_id << " at index " << (evse_id -1) << " : \n" << limits;
+         this->r_evse_manager.at(evse_id-1)->call_set_external_limits(limits);
+     }
+ }
