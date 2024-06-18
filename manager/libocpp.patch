@@ -63,34 +63,3 @@ diff -r -uw libocpp_unmod/lib/ocpp/v201/charge_point.cpp libocpp/lib/ocpp/v201/c
      this->send<SetChargingProfileResponse>(call_result);
  }
 Only in libocpp/lib/ocpp/v201: charge_point.cpp.orig
-diff -r -uw libocpp_unmod/lib/ocpp/v201/messages/SetChargingProfile.cpp libocpp/lib/ocpp/v201/messages/SetChargingProfile.cpp
---- libocpp_unmod/lib/ocpp/v201/messages/SetChargingProfile.cpp	2024-06-11 14:29:41
-+++ libocpp/lib/ocpp/v201/messages/SetChargingProfile.cpp	2024-06-12 12:25:48
-@@ -7,6 +7,15 @@
- #include <optional>
- 
- #include <ocpp/v201/messages/SetChargingProfile.hpp>
-+#include <ocpp/common/types.hpp>
-+#include <ocpp/v201/charge_point.hpp>
-+#include <ocpp/v201/ctrlr_component_variables.hpp>
-+#include <ocpp/v201/device_model_storage_sqlite.hpp>
-+#include <ocpp/v201/enums.hpp>
-+#include <ocpp/v201/messages/FirmwareStatusNotification.hpp>
-+#include <ocpp/v201/messages/LogStatusNotification.hpp>
-+#include <ocpp/v201/notify_report_requests_splitter.hpp>
-+#include <ocpp/v201/smart_charging.hpp>
- 
- using json = nlohmann::json;
- 
-@@ -31,8 +40,9 @@
- 
- void from_json(const json& j, SetChargingProfileRequest& k) {
-     // the required parts of the message
--    k.evseId = j.at("evseId");
--    k.chargingProfile = j.at("chargingProfile");
-+    EVLOG_error << "In the message class, parsing from JSON: " << j;
-+    k.evseId = j.value("evseId", 1);
-+    k.chargingProfile = j.value("chargingProfile", j.at("ChargingProfile"));
- 
-     // the optional parts of the message
-     if (j.contains("customData")) {

@@ -1,18 +1,13 @@
 #!/bin/bash
 
-if [ "$#" -ne 1 ]; then
-  echo "Usage: $0 <chargingStation>"
+if [ "$#" -lt 1 ] || [ "$#" -gt 2 ]; then
+  echo "Usage: $0 <chargingStation> <jsonFile>"
   exit 1
 fi
 
 CS=$1
-
-echo "setChargingProfile called with Charging Station: ${CS}"
-
-curl -X POST \
-  "http://localhost:9410/api/v0/cs/${CS}/setchargingprofile" \
-  -H "Content-Type: application/json" \
-  -d '{
+JSON_FILE=$2
+JSON_DATA='{
     "chargingProfileKind": "Absolute",
     "chargingProfilePurpose": "TxProfile",
     "chargingSchedule": [
@@ -64,3 +59,19 @@ curl -X POST \
     "validFrom": "2024-06-07T10:00:00Z",
     "validTo": "2024-06-07T18:00:00Z"
   }'
+
+# Read JSON file and do some error handling
+if [ -n "$JSON_FILE" ]; then
+  if [ ! -f "$JSON_FILE" ]; then
+    echo "Error: JSON file '$JSON_FILE' not found!"
+    exit 1
+  fi
+  JSON_DATA=$(cat "$JSON_FILE")
+fi
+
+echo "setChargingProfile called with Charging Station: ${CS}"
+
+curl -X POST \
+  "http://localhost:9410/api/v0/cs/${CS}/setchargingprofile" \
+  -H "Content-Type: application/json" \
+  -d "$JSON_DATA"
