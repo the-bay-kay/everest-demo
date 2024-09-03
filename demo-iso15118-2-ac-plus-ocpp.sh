@@ -90,8 +90,8 @@ cd "${DEMO_DIR}" || exit 1
 
 
 echo "Cloning EVerest from ${DEMO_REPO} into ${DEMO_DIR}/everest-demo"
-git clone --branch "${DEMO_BRANCH}" "${DEMO_REPO}" everest-demo
-# cp -r "${DEMO_REPO}" everest-demo
+# git clone --branch "${DEMO_BRANCH}" "${DEMO_REPO}" everest-demo
+cp -r "${DEMO_REPO}" everest-demo
 
 if [[ "$DEMO_VERSION" != v1.6j ]]; then
   echo "Cloning ${CSMS} CSMS from ${CSMS_REPO} into ${DEMO_DIR}/${CSMS}-csms and starting it"
@@ -349,6 +349,7 @@ docker compose --project-name everest-ac-demo --file "${DEMO_COMPOSE_FILE_NAME}"
 
 echo "Configuring and restarting nodered"
 docker cp nodered/config/config-sil-iso15118-ac-flow.json everest-ac-demo-nodered-1:/config/config-sil-two-evse-flow.json
+docker cp nodered/preview.py everest-ac-demo-nodered-1:/data/preview.py
 docker restart everest-ac-demo-nodered-1
 
 if [[ "$DEMO_VERSION" =~ sp2 || "$DEMO_VERSION" =~ sp3 ]]; then
@@ -379,5 +380,5 @@ fi
 
 if [[ "$DEMO_VERSION" =~ v2.0.1 ]]; then
   echo "Starting software in the loop simulation"
-  docker exec everest-ac-demo-manager-1 sh /ext/source/build/run-scripts/run-sil-ocpp201-pnc.sh
+  # docker exec everest-ac-demo-manager-1 sh /ext/source/build/run-scripts/run-sil-ocpp201-pnc.sh
 fi

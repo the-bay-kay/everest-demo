@@ -21,6 +21,14 @@
         "info": ""
     },
     {
+        "id": "14d19462de1bb1c2",
+        "type": "tab",
+        "label": "PowerCurve Selector",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "af1e1eeac9c4b704",
         "type": "group",
         "z": "ed603c51db9dcbb9",
@@ -37,9 +45,7 @@
             "1295e032d7ddbc20"
         ],
         "x": 1114,
-        "y": 439,
-        "w": 152,
-        "h": 82
+        "y": 439
     },
     {
         "id": "7140803fb3989089",
@@ -311,6 +317,17 @@
         "order": 5,
         "width": "6",
         "height": "1"
+    },
+    {
+        "id": "1b3feb6e4367b645",
+        "type": "ui_group",
+        "name": "PowerCurve Selection",
+        "tab": "d3ada9fa4cf6ac53",
+        "order": 4,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
     },
     {
         "id": "c8955752ad17f297",
@@ -1518,7 +1535,7 @@
         "correl": "",
         "expiry": "",
         "broker": "fc8686af.48d178",
-        "x": 1230,
+        "x": 1310,
         "y": 840,
         "wires": []
     },
@@ -1597,7 +1614,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 1010,
+        "x": 1090,
         "y": 840,
         "wires": [
             [
@@ -1892,6 +1909,8 @@
         ],
         "seg1": "",
         "seg2": "",
+        "diff": false,
+        "className": "",
         "x": 1190,
         "y": 480,
         "wires": []
@@ -1971,7 +1990,7 @@
         "label": "Simulation enable (HIL)",
         "tooltip": "",
         "group": "b364f7eb4621082b",
-        "order": 10,
+        "order": 12,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -2016,7 +2035,7 @@
         "topic": "everest_external/nodered/#/carsim/cmd/execute_charging_session",
         "topicType": "str",
         "x": 170,
-        "y": 1040,
+        "y": 1120,
         "wires": [
             [
                 "620b0d248a89ece0"
@@ -2043,7 +2062,7 @@
         "topic": "everest_external/nodered/#/carsim/cmd/modify_charging_session",
         "topicType": "str",
         "x": 180,
-        "y": 1000,
+        "y": 1080,
         "wires": [
             [
                 "620b0d248a89ece0"
@@ -2085,7 +2104,7 @@
         "tooltip": "",
         "place": "Select option",
         "group": "b364f7eb4621082b",
-        "order": 10,
+        "order": 13,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -2093,12 +2112,12 @@
         "options": [
             {
                 "label": "AC ISO15118-2",
-                "value": "sleep 1;iso_wait_slac_matched;iso_set_departure_time null null;iso_start_v2g_session externalpayment,ac;iso_wait_pwr_ready;iso_draw_power_regulated 16,3;sleep 36000#iso_stop_charging;iso_wait_v2g_session_stopped;unplug#iso_pause_charging;iso_wait_for_resume#iso_start_bcb_toogle 3;iso_wait_pwm_is_running;iso_set_departure_time null null;iso_start_v2g_session ExternalPayment,AC_three_phase_core;iso_wait_pwr_ready;iso_draw_power_regulated 16,3;sleep 36000",
+                "value": "sleep 1;iso_wait_slac_matched;iso_set_departure_time null null;set_pc_scale 1;iso_start_v2g_session externalpayment,ac;iso_wait_pwr_ready;iso_draw_power_regulated 16,3;sleep 36000#iso_stop_charging;iso_wait_v2g_session_stopped;unplug#iso_pause_charging;iso_wait_for_resume#iso_start_bcb_toogle 3;iso_wait_pwm_is_running;iso_set_departure_time null null;iso_start_v2g_session ExternalPayment,AC_three_phase_core;iso_wait_pwr_ready;iso_draw_power_regulated 16,3;sleep 36000",
                 "type": "str"
             },
             {
                 "label": "AC ISO15118-2 Plug&Charge",
-                "value": "sleep 1;iso_wait_slac_matched;iso_set_departure_time null null;iso_start_v2g_session contract,ac;iso_wait_pwr_ready;iso_draw_power_regulated 16,3;sleep 36000#;iso_stop_charging;iso_wait_v2g_session_stopped;unplug#iso_pause_charging;iso_wait_for_resume#iso_start_bcb_toogle 3;iso_wait_pwm_is_running;iso_set_departure_time null null;iso_start_v2g_session contract,AC_three_phase_core;iso_wait_pwr_ready;iso_draw_power_regulated 16,3;sleep 36000",
+                "value": "sleep 1;iso_wait_slac_matched;iso_set_departure_time null null;set_pc_scale 1;iso_start_v2g_session contract,ac;iso_wait_pwr_ready;iso_draw_power_regulated 16,3;sleep 36000#;iso_stop_charging;iso_wait_v2g_session_stopped;unplug#iso_pause_charging;iso_wait_for_resume#iso_start_bcb_toogle 3;iso_wait_pwm_is_running;iso_set_departure_time null null;iso_start_v2g_session contract,AC_three_phase_core;iso_wait_pwr_ready;iso_draw_power_regulated 16,3;sleep 36000",
                 "type": "str"
             }
         ],
@@ -2107,7 +2126,7 @@
         "topicType": "str",
         "className": "",
         "x": 180,
-        "y": 1180,
+        "y": 1240,
         "wires": [
             [
                 "620b0d248a89ece0"
@@ -2119,14 +2138,14 @@
         "type": "function",
         "z": "ed603c51db9dcbb9",
         "name": "Buffer sim commands",
-        "func": "function handleDTEAChange() {\n    dt = flow.get('sim_departure_time')\n    ea = flow.get('sim_eamount')\n    let cmd = `iso_set_departure_time ${dt} ${ea}`\n\n    let start = flow.get('sim_commands_start').split(';')\n    let resume = flow.get('sim_commands_resume').split(';')\n\n    start.splice(2, 1, cmd)\n    resume.splice(2,1,cmd)\n    start = start.join(';')\n    resume = resume.join(';')\n    \n    flow.set('sim_commands_start', start);\n    flow.set('sim_commands_resume', resume);\n    \n}\n\nif (msg.topic.indexOf('sim_commands') > -1) {\n    const s = msg.payload.split('#');\n    flow.set('sim_commands_start', s[0]);\n    flow.set('sim_commands_stop', s[1]);\n    flow.set('sim_commands_pause', s[2]);\n    flow.set('sim_commands_resume', s[3]);\n    handleDTEAChange();\n} else if (msg.topic === 'eamount' || msg.topic === 'departure_time') {\n    handleDTEAChange();\n} else if (msg.payload == 'start') {\n    msg.payload = flow.get('sim_commands_start');\n    return msg;\n} else if (msg.payload == 'stop') {\n    msg.payload = flow.get('sim_commands_stop');\n    return msg;\n} else if (msg.payload == 'pause') {\n    msg.payload = flow.get('sim_commands_pause');\n    return msg;\n} else if (msg.payload == 'resume') {\n    msg.payload = flow.get('sim_commands_resume');\n    return msg;\n} else {\n    msg.payload = 'NONE';\n    return msg;\n}\n",
+        "func": "function handleDTEAChange() {\n    dt = global.get('sim_departure_time')\n    ea = global.get('sim_eamount')\n    let cmd = `iso_set_departure_time ${dt} ${ea}`\n\n    let start = flow.get('sim_commands_start').split(';')\n    let resume = flow.get('sim_commands_resume').split(';')\n\n    start.splice(2, 1, cmd)\n    resume.splice(2,1,cmd)\n    start = start.join(';')\n    resume = resume.join(';')\n    \n    flow.set('sim_commands_start', start);\n    flow.set('sim_commands_resume', resume);\n\n}\n\nfunction handleScaleChange() {\n    let cmd = `set_pc_scale ${global.get('scale_factor')}`;\n    let start = flow.get('sim_commands_start').split(';');\n    start.splice(3, 1, cmd);\n    start = start.join(';');\n    flow.set('sim_commands_start', start);\n}\n\n\nif (msg.topic.indexOf('sim_commands') > -1) {\n    const s = msg.payload.split('#');\n    flow.set('sim_commands_start', s[0]);\n    flow.set('sim_commands_stop', s[1]);\n    flow.set('sim_commands_pause', s[2]);\n    flow.set('sim_commands_resume', s[3]);\n    handleDTEAChange();\n} else if (msg.topic === 'eamount' || msg.topic === 'departure_time') {\n    handleDTEAChange();\n} else if (msg.topic === 'change_scale') {\n    handleScaleChange()\n} else if (msg.payload == 'start') {\n    msg.payload = flow.get('sim_commands_start');\n    return msg;\n} else if (msg.payload == 'stop') {\n    msg.payload = flow.get('sim_commands_stop');\n    return msg;\n} else if (msg.payload == 'pause') {\n    msg.payload = flow.get('sim_commands_pause');\n    return msg;\n} else if (msg.payload == 'resume') {\n    msg.payload = flow.get('sim_commands_resume');\n    return msg;\n} else {\n    msg.payload = 'NONE';\n    return msg;\n}\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 640,
-        "y": 1020,
+        "x": 800,
+        "y": 1000,
         "wires": [
             [
                 "361b3d846c4e6673",
@@ -2148,8 +2167,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1250,
-        "y": 920,
+        "x": 1050,
+        "y": 960,
         "wires": []
     },
     {
@@ -2174,7 +2193,7 @@
         "payload": "sleep 1;iec_wait_pwr_ready;sleep 1;draw_power_regulated 16,3;sleep 36000#unplug#pause;sleep 3600#draw_power_regulated 16,3;sleep 36000",
         "payloadType": "str",
         "x": 150,
-        "y": 1240,
+        "y": 1280,
         "wires": [
             [
                 "f2ae0c306f3052f9"
@@ -2194,8 +2213,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1240,
-        "y": 960,
+        "x": 1050,
+        "y": 1000,
         "wires": []
     },
     {
@@ -2204,7 +2223,7 @@
         "z": "ed603c51db9dcbb9",
         "name": "",
         "group": "b364f7eb4621082b",
-        "order": 9,
+        "order": 10,
         "width": "3",
         "height": "1",
         "passthru": false,
@@ -2219,7 +2238,7 @@
         "topic": "everest_external/nodered/#/carsim/cmd/modify_charging_session",
         "topicType": "str",
         "x": 170,
-        "y": 1080,
+        "y": 1160,
         "wires": [
             [
                 "620b0d248a89ece0"
@@ -2232,7 +2251,7 @@
         "z": "ed603c51db9dcbb9",
         "name": "",
         "group": "b364f7eb4621082b",
-        "order": 9,
+        "order": 11,
         "width": "3",
         "height": "1",
         "passthru": false,
@@ -2247,7 +2266,7 @@
         "topic": "everest_external/nodered/#/carsim/cmd/modify_charging_session",
         "topicType": "str",
         "x": 170,
-        "y": 1120,
+        "y": 1200,
         "wires": [
             [
                 "620b0d248a89ece0"
@@ -2262,7 +2281,7 @@
         "label": "EAmount",
         "tooltip": "",
         "group": "b364f7eb4621082b",
-        "order": 13,
+        "order": 14,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -2288,7 +2307,7 @@
         "label": "DepartureTime:",
         "tooltip": "",
         "group": "b364f7eb4621082b",
-        "order": 13,
+        "order": 15,
         "width": 0,
         "height": 0,
         "passthru": true,
@@ -2311,18 +2330,337 @@
         "type": "function",
         "z": "ed603c51db9dcbb9",
         "name": "Set SIM EAmount & DepartureTime",
-        "func": "if (msg.payload == '') {\n    if (msg.topic == 'eamount') {\n        flow.set('sim_eamount', 60);\n        return msg;\n    }\n    // topic == 'departure_time'\n    flow.set('sim_departure_time', 86400);\n    return msg;\n}\nif (msg.topic == 'eamount') {\n    flow.set('sim_eamount', msg.payload);\n    return msg;\n}\n\nflow.set('sim_departure_time', msg.payload);\nreturn msg;",
+        "func": "if (msg.payload == '') {\n    if (msg.topic == 'eamount') {\n        global.set('sim_eamount', 60);\n        return msg;\n    }\n    // topic == 'departure_time'\n    global.set('sim_departure_time', 86400);\n    return msg;\n}\nif (msg.topic == 'eamount') {\n    global.set('sim_eamount', msg.payload);\n    return msg;\n}\n\nglobal.set('sim_departure_time', msg.payload);\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "// Code added here will be run once\n// whenever the node is started.\n\nflow.set('sim_eamount', 60);\nflow.set('sim_departure_time', 86400);",
         "finalize": "",
         "libs": [],
-        "x": 450,
-        "y": 940,
+        "x": 470,
+        "y": 920,
         "wires": [
             [
+                "620b0d248a89ece0",
+                "d67d1b4c011c687b"
+            ]
+        ]
+    },
+    {
+        "id": "d67d1b4c011c687b",
+        "type": "link out",
+        "z": "ed603c51db9dcbb9",
+        "name": "Change PowerCurve",
+        "mode": "link",
+        "links": [
+            "b0a8bdf368f6c958"
+        ],
+        "x": 705,
+        "y": 940,
+        "wires": []
+    },
+    {
+        "id": "91455f2d1bdbd0b9",
+        "type": "ui_numeric",
+        "z": "ed603c51db9dcbb9",
+        "name": "",
+        "label": "PowerCurve ScaleFactor",
+        "tooltip": "",
+        "group": "b364f7eb4621082b",
+        "order": 16,
+        "width": 0,
+        "height": 0,
+        "wrap": false,
+        "passthru": true,
+        "topic": "change_scale",
+        "topicType": "str",
+        "format": "{{value}}",
+        "min": "1",
+        "max": "20",
+        "step": 1,
+        "className": "",
+        "x": 210,
+        "y": 1000,
+        "wires": [
+            [
+                "59c6729f2e8d8658"
+            ]
+        ]
+    },
+    {
+        "id": "5c8cf3faa7012099",
+        "type": "link out",
+        "z": "ed603c51db9dcbb9",
+        "name": "SendScaleFactor",
+        "mode": "link",
+        "links": [
+            "f3368c6eaecabe6a"
+        ],
+        "x": 635,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "59c6729f2e8d8658",
+        "type": "change",
+        "z": "ed603c51db9dcbb9",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "scale_factor",
+                "pt": "global",
+                "to": "payload",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 430,
+        "y": 960,
+        "wires": [
+            [
+                "5c8cf3faa7012099",
                 "620b0d248a89ece0"
             ]
         ]
+    },
+    {
+        "id": "078d89b2bb5f5f2e",
+        "type": "debug",
+        "z": "14d19462de1bb1c2",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 610,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "b594a4eb4ad9bd9b",
+        "type": "function",
+        "z": "14d19462de1bb1c2",
+        "name": "GenGraph",
+        "func": "// sample function\nfunction linear(a,b) {\n    return function (x) {\n        return a*x + b\n    }\n}\n\nfunction generateDatapoint(z, func) {\n    return {\n        x: Date.now() + (z * 60),\n        y: func(z)\n    }\n}\n\nconst funcA = linear(1, global.get(\"scale_factor\") * 60) //quadratic(1,1,1);\nconst funcB = linear(-1, global.get(\"scale_factor\") * -60) //quadratic(-1,1,400);\n\n// sessionDuration =  msg.payload * 60 //  Number( global.get('sim_departure_time'))\n\nlet sessionDuration = Number(global.get('sim_departure_time'))\n\n\nlet firstCurve = [];\nlet secondCurve = [];\n\nfor (var i = 0; i <= sessionDuration; i++) {\n    firstCurve.push(generateDatapoint(i, funcA))\n    secondCurve.push(generateDatapoint(i, funcB))\n}\n\nmsg.payload = [{\n    \"series\": [\"A\", \"B\"],\n    \"data\": [firstCurve, secondCurve],\n    \"labels\": [\"r1\", \"r2\"],\n}]\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 380,
+        "wires": [
+            [
+                "078d89b2bb5f5f2e",
+                "9f2b1f7e6be14a4d"
+            ]
+        ]
+    },
+    {
+        "id": "b0a8bdf368f6c958",
+        "type": "link in",
+        "z": "14d19462de1bb1c2",
+        "name": "Update DepartureTime & EAmount",
+        "links": [
+            "d67d1b4c011c687b"
+        ],
+        "x": 185,
+        "y": 380,
+        "wires": [
+            [
+                "b594a4eb4ad9bd9b"
+            ]
+        ]
+    },
+    {
+        "id": "9f2b1f7e6be14a4d",
+        "type": "ui_chart",
+        "z": "14d19462de1bb1c2",
+        "name": "",
+        "group": "1b3feb6e4367b645",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "label": "chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "",
+        "ymax": "",
+        "removeOlder": 1,
+        "removeOlderPoints": "",
+        "removeOlderUnit": "3600",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#aec7e8",
+            "#ff7f0e",
+            "#2ca02c",
+            "#98df8a",
+            "#d62728",
+            "#ff9896",
+            "#9467bd",
+            "#c5b0d5"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 590,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "9a984ec5f486be35",
+        "type": "function",
+        "z": "14d19462de1bb1c2",
+        "name": "Fork",
+        "func": "// adaptation of DJ's LQR algorithm, originally written in Python\nfunction LQRChargeCurve(KS) { // original function had EAmount & DT, all infered\n\n}\n\n\n// sample function\nfunction linear(a,b) {\n    return function (x) {\n        return a*x + b\n    }\n}\n\nfunction generateDatapoint(z, func) {\n    return {\n        x: Date.now() + (z * 60),\n        y: func(z)\n    }\n}\n\nconst funcA = linear(1, flow.get(\"scale_factor\") * 60) //quadratic(1,1,1);\nconst funcB = linear(-1, flow.get(\"scale_factor\") * -60) //quadratic(-1,1,400);\n\n//  sessionDuration =  msg.payload * 60 //  Number( global.get('sim_departure_time'))\nlet sessionDuration = Number( global.get('sim_departure_time'))\n\n\nlet firstCurve = [];\nlet secondCurve = [];\n\nfor (var i = 0; i <= sessionDuration; i++) {\n    firstCurve.push(generateDatapoint(i, funcA))\n    secondCurve.push(generateDatapoint(i, funcB))\n}\n\nmsg.payload = [{\n    \"series\": [\"A\", \"B\"],\n    \"data\": [firstCurve, secondCurve],\n    \"labels\": [\"r1\", \"r2\"],\n}]\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 440,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "f3368c6eaecabe6a",
+        "type": "link in",
+        "z": "14d19462de1bb1c2",
+        "name": "Update ScaleFactor",
+        "links": [
+            "5c8cf3faa7012099"
+        ],
+        "x": 185,
+        "y": 440,
+        "wires": [
+            [
+                "b594a4eb4ad9bd9b"
+            ]
+        ]
+    },
+    {
+        "id": "2e26b84c0ce17312",
+        "type": "exec",
+        "z": "14d19462de1bb1c2",
+        "command": "python /data/preview.py 3600 60 1",
+        "addpay": "",
+        "append": "",
+        "useSpawn": "false",
+        "timer": "",
+        "winHide": false,
+        "oldrc": false,
+        "name": "",
+        "x": 480,
+        "y": 220,
+        "wires": [
+            [
+                "89589c56117004e0"
+            ],
+            [
+                "7fdb901b144749c2"
+            ],
+            [
+                "3f49b49308941782"
+            ]
+        ]
+    },
+    {
+        "id": "739e08c1ec77c2a1",
+        "type": "inject",
+        "z": "14d19462de1bb1c2",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 230,
+        "y": 220,
+        "wires": [
+            [
+                "2e26b84c0ce17312"
+            ]
+        ]
+    },
+    {
+        "id": "89589c56117004e0",
+        "type": "debug",
+        "z": "14d19462de1bb1c2",
+        "name": "Output",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "7fdb901b144749c2",
+        "type": "debug",
+        "z": "14d19462de1bb1c2",
+        "name": "Error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 740,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "3f49b49308941782",
+        "type": "debug",
+        "z": "14d19462de1bb1c2",
+        "name": "Return code",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 760,
+        "y": 260,
+        "wires": []
     }
 ]
