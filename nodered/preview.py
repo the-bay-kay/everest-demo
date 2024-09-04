@@ -5,6 +5,7 @@ Created on Fri Aug  9 00:37:56 2024
 """
 
 import sys
+import json
 import numpy as np
 import control as ct
 
@@ -62,22 +63,30 @@ def LQRchargecurve(DepTime, EAmount, KS):
     Uc=  np.transpose(-K*(returnSimulationCL.states[0,:]-inputCL))
     Tc = returnSimulationCL.time
 
-    #print('YC is: ', Yc)
-    #print('UC is: ', Uc)
+    return Yc, Uc, Tc
 
-    return Yc, Uc
+
+def cleanData(yc, uc, tc):
+    yc_curve = [{"x": float(x), "y": float(y)} for x, y in zip(yc, tc)]
+    uc_curve = [{"x": float(x), "y": float(y)} for x, y in zip(uc, tc)]
+    return {
+      "series": ["A", "B"],
+      "data": [yc_curve, uc_curve],
+      "labels": ["r1", "r2"]
+    }
+
 
 
 def main():
-    if len(sys.argv) != 3:
+    if len(sys.argv) != 4:
         print("Usage: python preview.py <date_time> <deamount> <ks>")
         return
-    departure_time = sys.argv[1]
-    eamount = sys.argv[2]
-    ks = sys.argv[3]
-    print("About to run LQR!")
-    yc, uc = LQRchargecurve(departure_time, eamount, ks)
-
+    departure_time = int(sys.argv[1])
+    eamount = int(sys.argv[2])
+    ks = int(sys.argv[3])
+    yc, uc, tc = LQRchargecurve(departure_time, eamount, ks)
+    return_obj = cleanData(yc, uc, tc)
+    print(json.dumps(return_obj))
 
 if __name__ == "__main__":
     main()

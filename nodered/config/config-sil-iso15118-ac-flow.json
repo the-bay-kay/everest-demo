@@ -45,7 +45,9 @@
             "1295e032d7ddbc20"
         ],
         "x": 1114,
-        "y": 439
+        "y": 439,
+        "w": 152,
+        "h": 82
     },
     {
         "id": "7140803fb3989089",
@@ -2428,43 +2430,6 @@
         ]
     },
     {
-        "id": "078d89b2bb5f5f2e",
-        "type": "debug",
-        "z": "14d19462de1bb1c2",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 610,
-        "y": 380,
-        "wires": []
-    },
-    {
-        "id": "b594a4eb4ad9bd9b",
-        "type": "function",
-        "z": "14d19462de1bb1c2",
-        "name": "GenGraph",
-        "func": "// sample function\nfunction linear(a,b) {\n    return function (x) {\n        return a*x + b\n    }\n}\n\nfunction generateDatapoint(z, func) {\n    return {\n        x: Date.now() + (z * 60),\n        y: func(z)\n    }\n}\n\nconst funcA = linear(1, global.get(\"scale_factor\") * 60) //quadratic(1,1,1);\nconst funcB = linear(-1, global.get(\"scale_factor\") * -60) //quadratic(-1,1,400);\n\n// sessionDuration =  msg.payload * 60 //  Number( global.get('sim_departure_time'))\n\nlet sessionDuration = Number(global.get('sim_departure_time'))\n\n\nlet firstCurve = [];\nlet secondCurve = [];\n\nfor (var i = 0; i <= sessionDuration; i++) {\n    firstCurve.push(generateDatapoint(i, funcA))\n    secondCurve.push(generateDatapoint(i, funcB))\n}\n\nmsg.payload = [{\n    \"series\": [\"A\", \"B\"],\n    \"data\": [firstCurve, secondCurve],\n    \"labels\": [\"r1\", \"r2\"],\n}]\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 410,
-        "y": 380,
-        "wires": [
-            [
-                "078d89b2bb5f5f2e",
-                "9f2b1f7e6be14a4d"
-            ]
-        ]
-    },
-    {
         "id": "b0a8bdf368f6c958",
         "type": "link in",
         "z": "14d19462de1bb1c2",
@@ -2472,11 +2437,11 @@
         "links": [
             "d67d1b4c011c687b"
         ],
-        "x": 185,
-        "y": 380,
+        "x": 145,
+        "y": 180,
         "wires": [
             [
-                "b594a4eb4ad9bd9b"
+                "518af2e0416fdcd3"
             ]
         ]
     },
@@ -2518,25 +2483,8 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 590,
-        "y": 440,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "9a984ec5f486be35",
-        "type": "function",
-        "z": "14d19462de1bb1c2",
-        "name": "Fork",
-        "func": "// adaptation of DJ's LQR algorithm, originally written in Python\nfunction LQRChargeCurve(KS) { // original function had EAmount & DT, all infered\n\n}\n\n\n// sample function\nfunction linear(a,b) {\n    return function (x) {\n        return a*x + b\n    }\n}\n\nfunction generateDatapoint(z, func) {\n    return {\n        x: Date.now() + (z * 60),\n        y: func(z)\n    }\n}\n\nconst funcA = linear(1, flow.get(\"scale_factor\") * 60) //quadratic(1,1,1);\nconst funcB = linear(-1, flow.get(\"scale_factor\") * -60) //quadratic(-1,1,400);\n\n//  sessionDuration =  msg.payload * 60 //  Number( global.get('sim_departure_time'))\nlet sessionDuration = Number( global.get('sim_departure_time'))\n\n\nlet firstCurve = [];\nlet secondCurve = [];\n\nfor (var i = 0; i <= sessionDuration; i++) {\n    firstCurve.push(generateDatapoint(i, funcA))\n    secondCurve.push(generateDatapoint(i, funcB))\n}\n\nmsg.payload = [{\n    \"series\": [\"A\", \"B\"],\n    \"data\": [firstCurve, secondCurve],\n    \"labels\": [\"r1\", \"r2\"],\n}]\n\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 390,
-        "y": 440,
+        "x": 770,
+        "y": 180,
         "wires": [
             []
         ]
@@ -2549,11 +2497,11 @@
         "links": [
             "5c8cf3faa7012099"
         ],
-        "x": 185,
-        "y": 440,
+        "x": 145,
+        "y": 260,
         "wires": [
             [
-                "b594a4eb4ad9bd9b"
+                "518af2e0416fdcd3"
             ]
         ]
     },
@@ -2561,90 +2509,27 @@
         "id": "2e26b84c0ce17312",
         "type": "exec",
         "z": "14d19462de1bb1c2",
-        "command": "python /data/preview.py 3600 60 1",
-        "addpay": "",
+        "command": "",
+        "addpay": "payload",
         "append": "",
         "useSpawn": "false",
         "timer": "",
         "winHide": false,
         "oldrc": false,
         "name": "",
-        "x": 480,
+        "x": 450,
         "y": 220,
         "wires": [
             [
-                "89589c56117004e0"
+                "01c34252d3dcf8e7"
             ],
             [
-                "7fdb901b144749c2"
+                "5a250e3a4ec657b2"
             ],
             [
                 "3f49b49308941782"
             ]
         ]
-    },
-    {
-        "id": "739e08c1ec77c2a1",
-        "type": "inject",
-        "z": "14d19462de1bb1c2",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 230,
-        "y": 220,
-        "wires": [
-            [
-                "2e26b84c0ce17312"
-            ]
-        ]
-    },
-    {
-        "id": "89589c56117004e0",
-        "type": "debug",
-        "z": "14d19462de1bb1c2",
-        "name": "Output",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 740,
-        "y": 180,
-        "wires": []
-    },
-    {
-        "id": "7fdb901b144749c2",
-        "type": "debug",
-        "z": "14d19462de1bb1c2",
-        "name": "Error",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 740,
-        "y": 220,
-        "wires": []
     },
     {
         "id": "3f49b49308941782",
@@ -2659,8 +2544,81 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 760,
+        "x": 610,
         "y": 260,
+        "wires": []
+    },
+    {
+        "id": "518af2e0416fdcd3",
+        "type": "function",
+        "z": "14d19462de1bb1c2",
+        "name": "Generate Python Call",
+        "func": "\nlet dt = global.get('sim_departure_time')\nlet eamount = global.get('sim_eamount')\nlet ks = global.get('scale_factor')\nmsg.payload = `python3 /data/preview.py ${dt} ${eamount} ${ks}`\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 280,
+        "y": 220,
+        "wires": [
+            [
+                "2e26b84c0ce17312"
+            ]
+        ]
+    },
+    {
+        "id": "26c9499cfbddc78f",
+        "type": "debug",
+        "z": "14d19462de1bb1c2",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 790,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "01c34252d3dcf8e7",
+        "type": "function",
+        "z": "14d19462de1bb1c2",
+        "name": "Parse JSON",
+        "func": "data_points = JSON.parse(msg.payload)\nmsg.payload = [data_points]\n\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 180,
+        "wires": [
+            [
+                "9f2b1f7e6be14a4d",
+                "26c9499cfbddc78f"
+            ]
+        ]
+    },
+    {
+        "id": "5a250e3a4ec657b2",
+        "type": "debug",
+        "z": "14d19462de1bb1c2",
+        "name": "Error",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 220,
         "wires": []
     }
 ]
