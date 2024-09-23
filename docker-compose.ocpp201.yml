@@ -8,7 +8,7 @@ services:
       driver: none
 
   manager:
-    image: ghcr.io/the-bay-kay/everest-demo/manager:demo-with-departure-time
+    image: ghcr.io/the-bay-kay/everest-demo/manager:demo-with-powercurve
     platform: linux/x86_64
     depends_on:
       - mqtt-server
@@ -21,8 +21,7 @@ services:
       - "host.docker.internal:host-gateway"
 
   nodered:
-    # image: ghcr.io/everest/everest-demo/nodered:${TAG}
-    build: ./nodered
+    image: ghcr.io/the-bay-kay/everest-demo/nodered:demo-with-powercurve
     depends_on:
       - mqtt-server
     ports:

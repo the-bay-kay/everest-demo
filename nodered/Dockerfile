@@ -4,23 +4,6 @@ RUN npm install node-red-contrib-ui-actions
 RUN npm install node-red-node-ui-table
 RUN npm install node-red-contrib-ui-level
 
-# The method below attempts to run this via PIP... Since I have been
-# Unable to get the `USER root` command to correctly give 
-#USER root
-#RUN apk update && \
-#    apk add --virtual python-dev 
-# python3-pip python3-numpy python3-pandas python3-control
-# RUN pip install control numpy
-
-RUN apk add --update --no-cache py3-pip-20.3.4-r1 
-
-RUN python3 -m ensurepip
-# RUN /usr/src/node-red/.local/bin/pip
-# RUN pip3 install --no-cache --upgrade pip setuptools control numpy
-#RUN ln -sf /usr/bin/pip3 /usr/bin/pip
-
-#USER node-red
-
-# COPY --chown=node-red:root config /config
+COPY --chown=node-red:root config /config
 
 LABEL org.opencontainers.image.source=https://github.com/everest/everest-demo

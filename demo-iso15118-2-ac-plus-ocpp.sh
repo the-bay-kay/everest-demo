@@ -349,7 +349,6 @@ docker compose --project-name everest-ac-demo --file "${DEMO_COMPOSE_FILE_NAME}"
 
 echo "Configuring and restarting nodered"
 docker cp nodered/config/config-sil-iso15118-ac-flow.json everest-ac-demo-nodered-1:/config/config-sil-two-evse-flow.json
-docker cp nodered/preview.py everest-ac-demo-nodered-1:/data/preview.py
 docker restart everest-ac-demo-nodered-1
 
 if [[ "$DEMO_VERSION" =~ sp2 || "$DEMO_VERSION" =~ sp3 ]]; then
