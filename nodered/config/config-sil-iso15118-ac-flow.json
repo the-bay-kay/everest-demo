@@ -45,7 +45,9 @@
             "3294112fae5f8935"
         ],
         "x": 1114,
-        "y": 439
+        "y": 439,
+        "w": 152,
+        "h": 82
     },
     {
         "id": "7140803fb3989089",
@@ -1986,7 +1988,7 @@
         "name": "Simulation control",
         "info": "",
         "x": 190,
-        "y": 820,
+        "y": 800,
         "wires": []
     },
     {
@@ -2015,7 +2017,7 @@
         "offcolor": "",
         "animate": false,
         "x": 210,
-        "y": 880,
+        "y": 840,
         "wires": [
             [
                 "7b32fdb9765b5b25"
@@ -2300,7 +2302,7 @@
         "className": "",
         "topicType": "str",
         "x": 160,
-        "y": 920,
+        "y": 880,
         "wires": [
             [
                 "780ad2bb33bc86f2"
@@ -2465,6 +2467,35 @@
         ]
     },
     {
+        "id": "48a72b9462a47549",
+        "type": "inject",
+        "z": "f2458a538a8e5f3f",
+        "name": "Initialize EAmount",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "initialize_eamount",
+        "payload": "60",
+        "payloadType": "num",
+        "x": 150,
+        "y": 920,
+        "wires": [
+            [
+                "cfb4f2d5e64377dc"
+            ]
+        ]
+    },
+    {
         "id": "5f3298009f329307",
         "type": "link in",
         "z": "c545737cb63c89af",
@@ -2514,9 +2545,7 @@
             [
                 "e0e46da51f4aa67c"
             ],
-            [
-                "795484587a4140a5"
-            ],
+            [],
             []
         ]
     },
@@ -2667,7 +2696,7 @@
         "topic": "topic",
         "topicType": "msg",
         "className": "",
-        "x": 160,
+        "x": 340,
         "y": 420,
         "wires": [
             [
@@ -2777,8 +2806,8 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 240,
-        "y": 320,
+        "x": 230,
+        "y": 360,
         "wires": [
             [
                 "f226b7c82303f926",
@@ -3044,5 +3073,34 @@
         "x": 850,
         "y": 240,
         "wires": []
+    },
+    {
+        "id": "557244d96571d6da",
+        "type": "inject",
+        "z": "c545737cb63c89af",
+        "name": "Initialize Alg",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "algorithm_one",
+        "payloadType": "str",
+        "x": 150,
+        "y": 420,
+        "wires": [
+            [
+                "72b7fc0e95c52de7"
+            ]
+        ]
     }
 ]
