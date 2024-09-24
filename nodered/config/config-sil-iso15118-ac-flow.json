@@ -45,9 +45,7 @@
             "3294112fae5f8935"
         ],
         "x": 1114,
-        "y": 439,
-        "w": 152,
-        "h": 82
+        "y": 439
     },
     {
         "id": "7140803fb3989089",
@@ -2633,7 +2631,7 @@
         "type": "function",
         "z": "c545737cb63c89af",
         "name": "Split Curve: Power Draw",
-        "func": "draw_curve = {\n    \"series\": [msg.payload[0].series[1]],\n    \"data\": [msg.payload[0].data[1]],\n    \"labels\": [msg.payload[0].labels[1]]\n}\n\nscale = .00001\nif (msg.topic === 'power_curve_preview') {\n    scale = 1000\n}\n\ndraw_curve.data[0] = draw_curve.data[0].map(item => {\n    return {\n        x: item.x * 1000, // Chart expects miliseconds, convert\n        y: item.y * scale // Convert miliwatt to watt\n    };\n});\n\nmsg.payload = [draw_curve]\n\nreturn msg;",
+        "func": "draw_curve = {\n    \"series\": [msg.payload[0].series[1]],\n    \"data\": [msg.payload[0].data[1]],\n    \"labels\": [msg.payload[0].labels[1]]\n}\n\ntime_scale = 1\nscale = 1000\nif (msg.topic === 'power_curve_preview') {\n    scale = 1000\n    time_scale = 1000\n    draw_curve.data[0] = draw_curve.data[0].map(item => {\n    return {\n        x: item.x * time_scale, // Chart expects miliseconds, convert\n        y: item.y * scale // Convert miliwatt to watt\n    };\n});\n}\nelse {\n    draw_curve.data[0] = draw_curve.data[0].map(item => {\n    // Patch 4 scale, need to fix in manager later\n    return {\n        x: item.y * time_scale, \n        y: item.x * scale // Convert miliwatt to watt\n    };\n});\n}\n\n\n\nmsg.payload = [draw_curve]\n\nreturn msg;",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -2652,7 +2650,7 @@
         "type": "function",
         "z": "c545737cb63c89af",
         "name": "Split Curve: Proggress to EAMount",
-        "func": "progress_curve = {\n    \"series\": [msg.payload[0].series[0]],\n    \"data\": [msg.payload[0].data[0]],\n    \"labels\": [msg.payload[0].labels[0]]\n}\n\nscale = 100000\nif (msg.topic === 'power_curve_preview') {\n    scale = 100\n}\n\nprogress_curve.data[0] = progress_curve.data[0].map(item => {\n    return {\n        x: item.x * 1000, // Convert to Miliseconds\n        y: item.y / scale\n    };\n});\n\nmsg.payload = [progress_curve]\n\nreturn msg;\n\n",
+        "func": "progress_curve = {\n    \"series\": [msg.payload[0].series[0]],\n    \"data\": [msg.payload[0].data[0]],\n    \"labels\": [msg.payload[0].labels[0]]\n}\ntime_scale = 1\nscale = 1\nif (msg.topic === 'power_curve_preview') {\n    time_scale = 1000\n    scale = 1\n}\n\nprogress_curve.data[0] = progress_curve.data[0].map(item => {\n    return {\n        x: item.y * time_scale, // X & Y need swapped\n        y: item.x / scale // eamount progress\n    };\n});\n\nmsg.payload = [progress_curve]\n\nreturn msg;\n\n",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
@@ -3056,23 +3054,6 @@
         "wires": [
             []
         ]
-    },
-    {
-        "id": "795484587a4140a5",
-        "type": "debug",
-        "z": "c545737cb63c89af",
-        "name": "",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 850,
-        "y": 240,
-        "wires": []
     },
     {
         "id": "557244d96571d6da",
