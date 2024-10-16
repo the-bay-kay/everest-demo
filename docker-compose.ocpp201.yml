@@ -21,7 +21,7 @@ services:
       - "host.docker.internal:host-gateway"
 
   nodered:
-    image: ghcr.io/the-bay-kay/everest-demo/nodered:demo-with-powercurve
+    image: ghcr.io/the-bay-kay/everest-demo/nodered:demo-renegotiation
     depends_on:
       - mqtt-server
     ports:

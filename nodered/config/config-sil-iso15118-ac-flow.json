@@ -2815,8 +2815,9 @@
         "type": "function",
         "z": "c545737cb63c89af",
         "name": "Generate Python Call",
-        "func": "let dt = global.get('sim_departure_time')\nlet eamount = global.get('sim_eamount')\nlet ks = global.get('scale_factor')\nmsg.payload = `python3 /bin/scripts/preview_curve_4_nodered.py ${dt} ${eamount} ${ks}`\nmsg.topic = 'power_curve_preview'\nreturn msg;",
+        "func": "const dt = global.get('sim_departure_time')\nconst eamount = global.get('sim_eamount')\nconst ks = global.get('scale_factor')\n// The path to environment should match the path defined in `/everest-demo/nodered/Dockerfile`\nconst path_to_environment = '/usr/src/node-red/python_environments/everest/bin/'\n\nmsg.payload = `${path_to_environment}python3 /bin/scripts/preview_curve_4_nodered.py ${dt} ${eamount} ${ks}`\nmsg.topic = 'power_curve_preview'\nreturn msg;",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -2876,6 +2877,7 @@
         "name": "Stop Edits During Charge",
         "func": "if(msg.topic === 'power_curve_preview') {\n    // Only allow preview when not charging\n    if (flow.get('charging_status') === 'Idle' ) {\n        return msg\n    }\n}\nelse { // If active curve is sent...\n    return msg;\n}\n",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -2894,8 +2896,9 @@
         "type": "function",
         "z": "c545737cb63c89af",
         "name": "Split Curve: Power Draw",
-        "func": "draw_curve = {\n    \"series\": [msg.payload[0].series[1]],\n    \"data\": [msg.payload[0].data[1]],\n    \"labels\": [msg.payload[0].labels[1]]\n}\n\ntime_scale = 1\nscale = 1000\nif (msg.topic === 'power_curve_preview') {\n    scale = 1000\n    time_scale = 1000\n    draw_curve.data[0] = draw_curve.data[0].map(item => {\n    return {\n        x: item.x * time_scale, // Chart expects miliseconds, convert\n        y: item.y * scale // Convert miliwatt to watt\n    };\n});\n}\nelse {\n    draw_curve.data[0] = draw_curve.data[0].map(item => {\n    // Patch 4 scale, need to fix in manager later\n    return {\n        x: item.y * time_scale, \n        y: item.x * scale // Convert miliwatt to watt\n    };\n});\n}\n\n\n\nmsg.payload = [draw_curve]\n\nreturn msg;",
+        "func": "let draw_curve = {\n    \"series\": [msg.payload[0].series[1]],\n    \"data\": [msg.payload[0].data[1]],\n    \"labels\": [msg.payload[0].labels[1]]\n}\n\nlet time_scale = 1\nlet scale = 1000\nif (msg.topic === 'power_curve_preview') {\n    scale = 1000\n    time_scale = 1000\n    draw_curve.data[0] = draw_curve.data[0].map(item => {\n    return {\n        x: item.x * time_scale, // Chart expects miliseconds, convert\n        y: item.y * scale // Convert miliwatt to watt\n    };\n});\n}\nelse {\n    draw_curve.data[0] = draw_curve.data[0].map(item => {\n    // Patch 4 scale, need to fix in manager later\n    return {\n        x: item.y * time_scale, \n        y: item.x * scale // Convert miliwatt to watt\n    };\n});\n}\n\nmsg.payload = [draw_curve]\n\nreturn msg;",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -2913,8 +2916,9 @@
         "type": "function",
         "z": "c545737cb63c89af",
         "name": "Split Curve: Proggress to EAMount",
-        "func": "progress_curve = {\n    \"series\": [msg.payload[0].series[0]],\n    \"data\": [msg.payload[0].data[0]],\n    \"labels\": [msg.payload[0].labels[0]]\n}\ntime_scale = 1\nscale = 1\nif (msg.topic === 'power_curve_preview') {\n    time_scale = 1000\n    scale = 1\n}\n\nprogress_curve.data[0] = progress_curve.data[0].map(item => {\n    return {\n        x: item.y * time_scale, // X & Y need swapped\n        y: item.x / scale // eamount progress\n    };\n});\n\nmsg.payload = [progress_curve]\n\nreturn msg;\n\n",
+        "func": "progress_curve = {\n    \"series\": [msg.payload[0].series[0]],\n    \"data\": [msg.payload[0].data[0]],\n    \"labels\": [msg.payload[0].labels[0]]\n}\nlet time_scale = 1\nlet scale = 1\nif (msg.topic === 'power_curve_preview') {\n    time_scale = 1000\n    scale = 1\n}\n\nprogress_curve.data[0] = progress_curve.data[0].map(item => {\n    return {\n        x: item.y * time_scale, // X & Y need swapped\n        y: item.x / scale // eamount progress\n    };\n});\n\nmsg.payload = [progress_curve]\n\nreturn msg;\n",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -3201,6 +3205,7 @@
         "name": "Reset Graph after Charge",
         "func": "if (msg.payload === \"Idle\") {\n    return msg;\n}",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -3220,6 +3225,7 @@
         "name": "SetLocalChargingState",
         "func": "flow.set(\"charging_status\",msg.payload)\nreturn msg;",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -3268,10 +3274,12 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 1600,
+        "x": 1700,
         "y": 160,
         "wires": [
-            []
+            [
+                "58b472228f5fa2a5"
+            ]
         ]
     },
     {
@@ -3312,7 +3320,7 @@
         "outputs": 1,
         "useDifferentColor": false,
         "className": "",
-        "x": 1600,
+        "x": 1700,
         "y": 200,
         "wires": [
             []
@@ -3346,5 +3354,21 @@
                 "72b7fc0e95c52de7"
             ]
         ]
+    },
+    {
+        "id": "58b472228f5fa2a5",
+        "type": "debug",
+        "z": "c545737cb63c89af",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1880,
+        "y": 80,
+        "wires": []
     }
 ]
