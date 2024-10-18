@@ -1859,26 +1859,6 @@
         ]
     },
     {
-        "id": "ca2e3dad158bd6a9",
-        "type": "function",
-        "z": "f2458a538a8e5f3f",
-        "name": "",
-        "func": "if (msg.topic.indexOf('totalKw')>=0) {\n    console.warn(\"Received totalKw message\");\n    if (context.data.stop_updating_kw) {\n        console.error(\"stopping kw updates because this is annoying\")\n    } else {\n        context.data.totalKw = msg.payload;\n    }\n}\nelse if (msg.topic.indexOf('state_string')>=0) {\n    console.error(\"how can I show the logs\");\n    context.data.state_string = msg.payload;\n    if (msg.payload === 'Charging') {\n        context.data.totalKw = 200;\n        context.data.stop_updating_kw = true;\n    } else {\n        context.data.stop_updating_kw = false;\n    }\n}\n\n//node.warn(msg.topic);\nmsg.payload = context.data.totalKw;\nmsg.label = context.data.state_string;\nreturn msg;",
-        "outputs": 1,
-        "noerr": 0,
-        "initialize": "// Code added here will be run once\n// whenever the node is started.\ncontext.data = {}",
-        "finalize": "",
-        "libs": [],
-        "x": 980,
-        "y": 480,
-        "wires": [
-            [
-                "9212eca260b8a883",
-                "3294112fae5f8935"
-            ]
-        ]
-    },
-    {
         "id": "9212eca260b8a883",
         "type": "debug",
         "z": "f2458a538a8e5f3f",
@@ -1939,7 +1919,7 @@
         "y": 500,
         "wires": [
             [
-                "ca2e3dad158bd6a9"
+                "b3e9a9ae6de0d6db"
             ]
         ]
     },
@@ -1950,6 +1930,7 @@
         "name": "Filter connector number",
         "func": "if (msg.topic.indexOf(String(flow.get('connector_number'))) > -1) return msg;",
         "outputs": 1,
+        "timeout": "",
         "noerr": 0,
         "initialize": "",
         "finalize": "",
@@ -1958,7 +1939,7 @@
         "y": 460,
         "wires": [
             [
-                "ca2e3dad158bd6a9"
+                "b3e9a9ae6de0d6db"
             ]
         ]
     },
@@ -2753,6 +2734,27 @@
         "wires": [
             [
                 "e537cdf4fedff5d5"
+            ]
+        ]
+    },
+    {
+        "id": "b3e9a9ae6de0d6db",
+        "type": "function",
+        "z": "f2458a538a8e5f3f",
+        "name": "",
+        "func": "if (msg.topic.indexOf('totalKw') >= 0) {\n    context.data.totalKw = msg.payload;\n}\nelse if (msg.topic.indexOf('state_string') >= 0) {\n    context.data.state_string = msg.payload;\n}\n\n//node.warn(msg.topic);\nmsg.payload = context.data.totalKw;\nmsg.label = context.data.state_string;\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "// Code added here will be run once\n// whenever the node is started.\ncontext.data = {}",
+        "finalize": "",
+        "libs": [],
+        "x": 980,
+        "y": 480,
+        "wires": [
+            [
+                "3294112fae5f8935",
+                "9212eca260b8a883"
             ]
         ]
     },
