@@ -12,7 +12,6 @@ CITRINEOS_REPO="https://github.com/citrineos/citrineos-core.git"
 CITRINEOS_BRANCH="feature/everest-demo"
 
 
-
 usage="usage: $(basename "$0") [-r <repo>] [-b <branch>] [-j|1|2|3|c] [-h]
 
 This script will run EVerest ISO 15118-2 AC charging with OCPP demos.
@@ -91,7 +90,8 @@ cd "${DEMO_DIR}" || exit 1
 
 
 echo "Cloning EVerest from ${DEMO_REPO} into ${DEMO_DIR}/everest-demo"
-git clone --branch "${DEMO_BRANCH}" "${DEMO_REPO}" everest-demo
+# git clone --branch "${DEMO_BRANCH}" "${DEMO_REPO}" everest-demo
+cp -r "${DEMO_REPO}" everest-demo
 
 if [[ "$DEMO_VERSION" != v1.6j  && "$DEMO_CSMS" == maeve ]]; then
   echo "Cloning ${DEMO_CSMS} CSMS from ${MAEVE_REPO} into ${DEMO_DIR}/${DEMO_CSMS}-csms and starting it"
@@ -231,7 +231,8 @@ pushd everest-demo || exit 1
 echo "API calls to CSMS finished, Starting everest"
 docker compose --project-name everest-ac-demo --file "${DEMO_COMPOSE_FILE_NAME}" up -d --wait
 docker cp config-sil-ocpp201-pnc.yaml  everest-ac-demo-manager-1:/ext/source/config/config-sil-ocpp201-pnc.yaml
-if [[ "$DEMO_VERSION" =~ sp2 || "$DEMO_VERSION" =~ sp3 ]]; then
+
+if [[ "$DEMO_VERSION" =~ sp1 || "$DEMO_VERSION" =~ sp2 || "$DEMO_VERSION" =~ sp3 ]]; then
   docker cp manager/cached_certs_correct_name_emaid.tar.gz everest-ac-demo-manager-1:/ext/source/build
   docker exec everest-ac-demo-manager-1 /bin/bash -c "pushd /ext/source/build && tar xf cached_certs_correct_name_emaid.tar.gz"
 
@@ -241,9 +242,12 @@ fi
 
 if [[ "$DEMO_CSMS" == 'maeve' ]]; then
   if [[ "$DEMO_VERSION" =~ sp1 ]]; then
-    echo "Copying device DB, configured to SecurityProfile: 1"
-    docker cp manager/device_model_storage_maeve_sp1.db \
-      everest-ac-demo-manager-1:/ext/source/build/dist/share/everest/modules/OCPP201/device_model_storage.db
+    #echo "Copying device DB, configured to SecurityProfile: 1"
+    echo "Don't copy DB, let's generate from config patch..."
+
+    docker cp manager/db_csms_url.patch everest-ac-demo-manager-1:/tmp/
+    docker exec everest-ac-demo-manager-1 /bin/bash -c "apk add patch && cd / && patch -p0 -i /tmp/db_csms_url.patch"
+
   elif [[ "$DEMO_VERSION" =~ sp2 ]]; then
     echo "Copying device DB, configured to SecurityProfile: 2"
     docker cp manager/device_model_storage_maeve_sp2.db \
@@ -273,5 +277,5 @@ fi
 
 if [[ "$DEMO_VERSION" =~ v2.0.1 ]]; then
   echo "Starting software in the loop simulation"
-  docker exec everest-ac-demo-manager-1 sh /ext/source/build/run-scripts/run-sil-ocpp201-pnc.sh
+  # docker exec everest-ac-demo-manager-1 sh /ext/source/build/run-scripts/run-sil-ocpp201-pnc.sh
 fi

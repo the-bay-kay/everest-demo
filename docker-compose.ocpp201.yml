@@ -8,13 +8,14 @@ services:
       driver: none
 
   manager:
-    image: ghcr.io/everest/everest-demo/manager:${TAG}
+    # image: ghcr.io/everest/everest-demo/manager:${TAG}
+    build: ./manager
     platform: linux/x86_64
     deploy:
       resources:
         limits:
-          cpus: "${EVEREST_MANAGER_CPUS}"
-          memory: "${EVEREST_MANAGER_MEMORY}"
+          cpus: "4" #"${EVEREST_MANAGER_CPUS}"
+          memory: "8GB" #"${EVEREST_MANAGER_MEMORY}"
     depends_on:
       - mqtt-server
     environment:
@@ -26,7 +27,8 @@ services:
       - "host.docker.internal:host-gateway"
 
   nodered:
-    image: ghcr.io/everest/everest-demo/nodered:${TAG}
+    # image: ghcr.io/everest/everest-demo/nodered:${TAG}
+    build: ./nodered
     depends_on:
       - mqtt-server
     ports:
