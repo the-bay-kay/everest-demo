@@ -230,6 +230,21 @@ fi
 pushd everest-demo || exit 1
 echo "API calls to CSMS finished, Starting everest"
 docker compose --project-name everest-ac-demo --file "${DEMO_COMPOSE_FILE_NAME}" up -d --wait
+
+
+echo "Copying over patches..."
+docker cp manager/enable_iso_dt.patch everest-ac-demo-manager-1:/tmp/
+docker cp manager/enable_ocpp_logging.patch everest-ac-demo-manager-1:/tmp/
+
+
+echo "Applying pre-build patches"
+docker exec everest-ac-demo-manager-1 /bin/bash -c "apk add patch"
+docker exec everest-ac-demo-manager-1 /bin/bash -c "cd / && patch -p0 -i /tmp/enable_iso_dt.patch"
+docker exec everest-ac-demo-manager-1 /bin/bash -c "cd / && patch -p0 -i /tmp/enable_ocpp_logging.patch"
+
+echo "Recompile..."
+docker exec everest-ac-demo-manager-1 /bin/bash -c "cd /ext/source/build && make install -j6"
+
 docker cp config-sil-ocpp201-pnc.yaml  everest-ac-demo-manager-1:/ext/source/config/config-sil-ocpp201-pnc.yaml
 
 if [[ "$DEMO_VERSION" =~ sp1 || "$DEMO_VERSION" =~ sp2 || "$DEMO_VERSION" =~ sp3 ]]; then
