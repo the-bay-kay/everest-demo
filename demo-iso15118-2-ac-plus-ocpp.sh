@@ -257,11 +257,11 @@ echo "Recompile..."
 docker exec everest-ac-demo-manager-1 /bin/bash -c "cd /ext/source/build && make install -j6"
 
 echo "Applying Post-Build patches..."
-docker exec everest-ac-demo-manager-1 /bin/bash -c "cd / && patch -p0 -N -i /tmp/enable_iso_dt.patch"
-docker exec everest-ac-demo-manager-1 /bin/bash -c "cd / && patch -p0 -N -i /tmp/jsevmanager_index_enabledt.patch"
 docker exec everest-ac-demo-manager-1 /bin/bash -c "cd / && patch -p0 -N -i /tmp/comm_session_handler_enabledt.patch"
 docker exec everest-ac-demo-manager-1 /bin/bash -c "cd / && patch -p0 -N -i /tmp/ev_state_enabledt.patch"
 docker exec everest-ac-demo-manager-1 /bin/bash -c "cd / && patch -p0 -N -i /tmp/iso15118_2_states_enabledt.patch"
+docker exec everest-ac-demo-manager-1 /bin/bash -c "cd / && patch -p0 -N -i /tmp/jsevmanager_index_enabledt.patch"
+docker exec everest-ac-demo-manager-1 /bin/bash -c "cd / && patch -p0 -N -i /tmp/pyjosev_module_enabledt.patch"
 docker exec everest-ac-demo-manager-1 /bin/bash -c "cd / && patch -p0 -N -i /tmp/simulator_enabledt.patch"
 
 # Copy over power_curve.py as well...
