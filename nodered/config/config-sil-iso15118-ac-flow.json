@@ -2623,7 +2623,7 @@
         "correl": "",
         "expiry": "",
         "broker": "fc8686af.48d178",
-        "x": 1100,
+        "x": 1190,
         "y": 1460,
         "wires": []
     },
@@ -2644,7 +2644,7 @@
         "drop": false,
         "allowrate": false,
         "outputs": 1,
-        "x": 780,
+        "x": 870,
         "y": 1460,
         "wires": [
             [
@@ -2656,7 +2656,7 @@
         "id": "c988916cd7e85eec",
         "type": "change",
         "z": "a0826fab08a85be9",
-        "name": "send sim_eamount",
+        "name": "send sim_departure_time",
         "rules": [
             {
                 "t": "set",
@@ -2671,11 +2671,12 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 600,
+        "x": 620,
         "y": 1460,
         "wires": [
             [
-                "5cafb4cf904e3b0a"
+                "5cafb4cf904e3b0a",
+                "b4dce9863a93b57b"
             ]
         ]
     },
@@ -2713,7 +2714,7 @@
         "statusVal": "",
         "statusType": "auto",
         "x": 520,
-        "y": 1680,
+        "y": 1720,
         "wires": []
     },
     {
@@ -2730,7 +2731,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 180,
-        "y": 1560,
+        "y": 1600,
         "wires": [
             [
                 "399646327fb325c7"
@@ -2751,7 +2752,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 200,
-        "y": 1620,
+        "y": 1660,
         "wires": [
             [
                 "399646327fb325c7"
@@ -2767,7 +2768,7 @@
         "action": "",
         "pretty": false,
         "x": 410,
-        "y": 1580,
+        "y": 1620,
         "wires": [
             [
                 "925c07bafa356330"
@@ -2787,7 +2788,7 @@
         "finalize": "",
         "libs": [],
         "x": 660,
-        "y": 1580,
+        "y": 1620,
         "wires": [
             [
                 "6ddebe46e9b89d41"
@@ -2812,7 +2813,7 @@
         "payload": "1",
         "payloadType": "num",
         "x": 150,
-        "y": 1760,
+        "y": 1800,
         "wires": [
             [
                 "622a14111d99e7ea"
@@ -2831,7 +2832,7 @@
         "finalize": "",
         "libs": [],
         "x": 350,
-        "y": 1760,
+        "y": 1800,
         "wires": [
             []
         ]
@@ -2840,7 +2841,7 @@
         "id": "bdb8cf43e38cbe8c",
         "type": "ui_template",
         "z": "a0826fab08a85be9",
-        "group": "f33656cf38af1793",
+        "group": "1709edaf.162962",
         "name": "",
         "order": 1,
         "width": 0,
@@ -2852,7 +2853,7 @@
         "templateScope": "local",
         "className": "",
         "x": 1080,
-        "y": 1580,
+        "y": 1620,
         "wires": [
             []
         ]
@@ -2869,7 +2870,7 @@
         "template": "<span>\n    {{#v2g_messages}}\n    {{.}},\n    {{/v2g_messages}}\n</span>\n<br />\n<br />\n<table border=\"1\">\n    <tr>\n        <th>Origin</th>\n        <th>Name</th>\n        <th>Type</th>\n        <th>Arguments / V2G Message (EXI Hex)</th>\n    </tr>\n    {{#payload}}\n    <tr class=\"\">\n        <td>{{payload.origin}}</td>\n        <td>{{payload.name}}</td>\n        <td>{{payload.type}}</td>\n        <td>{{payload.args}}</td>\n    </tr>\n    {{/payload}}\n</table>",
         "output": "str",
         "x": 920,
-        "y": 1580,
+        "y": 1620,
         "wires": [
             [
                 "bdb8cf43e38cbe8c"
@@ -2883,7 +2884,7 @@
         "name": "ISO 15118 Logs",
         "info": "",
         "x": 160,
-        "y": 1520,
+        "y": 1560,
         "wires": []
     },
     {
@@ -2900,7 +2901,7 @@
         "rh": 0,
         "inputs": 0,
         "x": 160,
-        "y": 1680,
+        "y": 1720,
         "wires": [
             [
                 "e9b6e98959838695"
@@ -2916,12 +2917,82 @@
         "action": "",
         "pretty": false,
         "x": 350,
-        "y": 1680,
+        "y": 1720,
         "wires": [
             [
                 "47dec13ba80137c8"
             ]
         ]
+    },
+    {
+        "id": "4a76fdec0a5e7f1e",
+        "type": "inject",
+        "z": "a0826fab08a85be9",
+        "name": "Initialize sim_departure_time",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": true,
+        "onceDelay": "1",
+        "topic": "init_sim_dt",
+        "payload": "86400",
+        "payloadType": "str",
+        "x": 220,
+        "y": 1500,
+        "wires": [
+            [
+                "49e764bc4aebb36d"
+            ]
+        ]
+    },
+    {
+        "id": "49e764bc4aebb36d",
+        "type": "change",
+        "z": "a0826fab08a85be9",
+        "name": "send sim_departure_time",
+        "rules": [
+            {
+                "t": "set",
+                "p": "sim_departure_time",
+                "pt": "global",
+                "to": "86400",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 610,
+        "y": 1500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b4dce9863a93b57b",
+        "type": "debug",
+        "z": "a0826fab08a85be9",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 860,
+        "y": 1500,
+        "wires": []
     },
     {
         "id": "32e0bed5f21a8e8e",
