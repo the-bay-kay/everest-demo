@@ -99,6 +99,7 @@ def generate_new_schedule(secc_schedule, uc, tc, departure_time, time_elapsed):
     # Define some helper functions...
     # Evenly sample from the `curve_schedule`< up to the end timestamp
     def sample_schedule(schedule):
+
         sliced_array = [x for x in schedule if (time_elapsed <= x[1])]
         return sliced_array[0:23]
 
@@ -135,18 +136,19 @@ def generate_new_schedule(secc_schedule, uc, tc, departure_time, time_elapsed):
             for new_s in curve_arr:
                 print(f"Is {schedule.max_power.value} < {new_s.max_power.value}?")
                 if new_s.max_power.value > schedule.max_power.value:
-                    print('Katie Err! :', new_s.max_power.value)
+                    print('Schedule Creation Error: ', new_s.max_power.value)
 
     curve_schedule = [(x[0],y) for x, y, in zip(uc, tc)] # UC is in kWh, not kW
     # We get 24 from ISO 15118-2, Table 71.  This is the max number of profile enteries.
     # For some reason, EVerest only accepts 23... Investigate later
     curve_schedule = sample_schedule(curve_schedule)
-    print("Slice!", curve_schedule)
-    print("OLD!", secc_schedule)
 
     if(len(curve_schedule) <= 2): # Check to see if we're done...
+        print("Done with profile, defaulting to SECC Schedule")
         return secc_schedule
+
     curve_schedule = convert_tuple_schedule(curve_schedule)
+    print("Returning a curve schedule of:", curve_schedule)
 
     return curve_schedule
 

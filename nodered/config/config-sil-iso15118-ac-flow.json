@@ -2963,7 +2963,7 @@
                 "t": "set",
                 "p": "sim_departure_time",
                 "pt": "global",
-                "to": "86400",
+                "to": "0",
                 "tot": "num"
             }
         ],
